@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,12 +29,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import edu.uw.yw239.wehike.R;
 import edu.uw.yw239.wehike.common.RequestSingleton;
+import edu.uw.yw239.wehike.profile.ProfileActivity;
+
 import static edu.uw.yw239.wehike.posts.PostDetailActivity.POST_ID_KEY;
 
 
@@ -228,6 +237,15 @@ public class PostsFragment extends Fragment {
 
             });
 
+            holder.userpic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                    String userName = holder.title.getText().toString().trim();
+                    intent.putExtra(ProfileActivity.USER_NAME_KEY, userName);
+                    getActivity().startActivity(intent);
+                }
+            });
         }
 
         @Override
