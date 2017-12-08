@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -25,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import org.json.JSONObject;
 
@@ -39,6 +41,7 @@ import edu.uw.yw239.wehike.common.LocationManager;
 import edu.uw.yw239.wehike.common.RequestSingleton;
 
 import static android.R.attr.description;
+import static android.R.attr.value;
 
 
 /**
@@ -49,7 +52,7 @@ import static android.R.attr.description;
  * Use the {@link TrailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TrailsFragment extends Fragment {
+public class TrailsFragment extends Fragment implements MaterialSearchBar.OnSearchActionListener{
     public static final String Trails_Fragment_Tag = "Trails_Fragment_Tag";
     private static final String TAG = "TrailsFrag";
 
@@ -61,6 +64,7 @@ public class TrailsFragment extends Fragment {
 
     private Button searchButton;
     private EditText searchEditText;
+    private MaterialSearchBar searchBar;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,10 +96,16 @@ public class TrailsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mQuery = getArguments().getString(QUERY);
 //            fetchTrails(mQuery,45.1,-122.15);
             mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+
+        if (savedInstanceState != null && savedInstanceState.containsKey("searchTerm")){
+            String q = savedInstanceState.getString("searchTerm");
+            fetchTrails(q,0.0,0.0);
         }
 
         this.getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -108,28 +118,47 @@ public class TrailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_trails, container, false);
 
+//        if (savedInstanceState != null && savedInstanceState.containsKey("searchTerm")){
+//            String q = savedInstanceState.getString("searchTerm");
+//            fetchTrails(q,0.0,0.0);
+//        }
+
+        searchBar = (MaterialSearchBar)view.findViewById(R.id.searchBar);
+        searchBar.setHint("Enter city name to search trails");
+        searchBar.setOnSearchActionListener(this);
+
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.maps);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                view.setVisibility(View.INVISIBLE);
+//                searchEditText = (EditText)getActivity().findViewById(R.id.seachText);
+//                String q = searchEditText.getText().toString();
                 Intent intent = new Intent(getActivity(), MapsActivity.class);
+                Log.v(TAG, ""+trailsList);
+
+                searchBar = (MaterialSearchBar)getActivity().findViewById(R.id.searchBar);
+                String searchTerm = searchBar.getText().toString();
+                intent.putExtra("trailsSearchTerm",searchTerm);
                 startActivity(intent);
+
             }
         });
 
-        searchButton = (Button)view.findViewById(R.id.searchButton);
-        searchEditText = (EditText)view.findViewById(R.id.seachText);
+//        searchButton = (Button)view.findViewById(R.id.searchButton);
+//        searchEditText = (EditText)view.findViewById(R.id.seachText);
+//
+//        searchButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                searchEditText = (EditText)getActivity().findViewById(R.id.seachText);
+//                String q = searchEditText.getText().toString();
+//                Log.v("what is the q?", q);
+//                fetchTrails(q, 0.0,0.0);
+//            }
+//        });
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchEditText = (EditText)getActivity().findViewById(R.id.seachText);
-                String q = searchEditText.getText().toString();
-                Log.v("what is the q?", q);
-                fetchTrails(q, 0.0,0.0);
-            }
-        });
+
 
 
         trailsList = new ArrayList<Trail>();
@@ -139,15 +168,15 @@ public class TrailsFragment extends Fragment {
         trailsLinearManager = new LinearLayoutManager(this.getActivity());
         trailsRecyclerView.setLayoutManager(trailsLinearManager);
 
-
         assert trailsRecyclerView != null;
 
         trailsRecyclerView.setAdapter(trailsRecyclerViewAdapter);
 
 //        setupTrailsRecyclerView(trailsRecyclerView);
         curLocation = LocationManager.getInstance().getLocation();
+        Log.v(TAG, curLocation+"hahahahah");
 
-        fetchTrails("",46.0,-122.15);
+        fetchTrails("",curLocation.getLatitude(),curLocation.getLongitude());
         return view;
 
     }
@@ -157,7 +186,7 @@ public class TrailsFragment extends Fragment {
         //contruct request url
         String http = "";
         if (q.equals("")){
-            http = "https://trailapi-trailapi.p.mashape.com/?lat="+lat+"&limit=25&lon="+lon+"&radius=25";
+            http = "https://trailapi-trailapi.p.mashape.com/?lat="+lat+"&limit=50&lon="+lon+"&radius=25";
         } else {
             http = "https://trailapi-trailapi.p.mashape.com/?q[city_cont]="+q+"&radius=25";
         }
@@ -176,6 +205,9 @@ public class TrailsFragment extends Fragment {
 //                        ((RecyclerView) recyclerView).setAdapter(mAdapter);
                         trailsList.clear();
                         trailsList.addAll(trails);
+                        if (trailsList.size()==0){
+                            Toast.makeText(getContext(),"No Trails found per your search",Toast.LENGTH_SHORT).show();
+                        }
                         trailsRecyclerViewAdapter.notifyDataSetChanged();
 
                     }
@@ -195,12 +227,6 @@ public class TrailsFragment extends Fragment {
             }
         };
         RequestSingleton.getInstance(getContext()).add(mRequest);
-    }
-
-
-
-    private void setupTrailsRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new TrailsRecyclerViewAdapter(trailsList));
     }
 
 
@@ -277,5 +303,58 @@ public class TrailsFragment extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+//        EditText seach = (EditText)getActivity().findViewById(R.id.seachText);
+//        String q = seach.getText().toString();
+//        outState.putString("seachTerm",q);
+        Log.v("hahahahahahha",outState+"");
+
+        //Save the fragment's state here
+    }
+
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            // Restore last state for checked position.
+            String q = savedInstanceState.getString("searTerm", "");
+            fetchTrails(q,0.0,0.0);
+        }
+    }
+
+    @Override
+    public void onSearchStateChanged(boolean b) {
+        String state = b ? "enabled" : "disabled";
+        Toast.makeText(getActivity(), "Search " + state, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onSearchConfirmed(CharSequence charSequence) {
+        Toast.makeText(getActivity(),"Searching "+ charSequence.toString()+" ......",Toast.LENGTH_SHORT).show();
+        fetchTrails(charSequence.toString(),0.0,0.0);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    @Override
+    public void onButtonClicked(int i) {
+        switch (i){
+            case MaterialSearchBar.BUTTON_NAVIGATION:
+                Toast.makeText(getActivity(), "Button Nav " , Toast.LENGTH_SHORT).show();
+                break;
+            case MaterialSearchBar.BUTTON_SPEECH:
+                Toast.makeText(getActivity(), "Speech " , Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+    }
+
 
 }

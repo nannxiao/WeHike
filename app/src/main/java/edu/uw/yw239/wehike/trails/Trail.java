@@ -41,7 +41,7 @@ public class Trail implements Parcelable{
             JSONArray jsontrails = response.getJSONArray("places"); //response.places
 
 
-            for(int i=0; i<Math.min(jsontrails.length(), 25); i++){
+            for(int i=0; i<jsontrails.length(); i++){
                 JSONObject trailItemObj = jsontrails.getJSONObject(i);
                 JSONArray actItemArray = trailItemObj.getJSONArray("activities");
 
@@ -57,14 +57,18 @@ public class Trail implements Parcelable{
 
                     for (int j=0; j<actItemArray.length(); j++){
                         JSONObject actItemObj = actItemArray.getJSONObject(j);
-                        trail.actNames.add(actItemObj.getString("name"));
-                        trail.actPicUrls.add(actItemObj.getString("thumbnail"));
-                        trail.actDescriptions.add(actItemObj.getString("description"));
-                        trail.actRatings.add(actItemObj.getDouble("rating"));
+                        if (!actItemObj.getString("thumbnail").equals("null")){
+                            trail.actNames.add(actItemObj.getString("name"));
+                            trail.actPicUrls.add(actItemObj.getString("thumbnail"));
+                            trail.actDescriptions.add(actItemObj.getString("description"));
+                            trail.actRatings.add(actItemObj.getDouble("rating"));
+                        }
                     }
                 }
-
-                trails.add(trail);
+                if (trail.actPicUrls.size()!=0){
+                    trail.picUrl = trail.actPicUrls.get(0);
+                    trails.add(trail);
+                }
             } //end for loop
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing json", e); //Android log the error

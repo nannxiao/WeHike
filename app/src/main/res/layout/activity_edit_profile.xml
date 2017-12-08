@@ -14,12 +14,13 @@
         android:layout_centerInParent="true"
         android:visibility="gone"/>
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/iv_edit_profile_photo"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:src="@mipmap/default_profile_image" />
 
     <LinearLayout
@@ -29,113 +30,172 @@
         android:layout_below="@id/iv_edit_profile_photo"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="15dp"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/et_edit_profile_user_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:text="User Name"
-            android:textColor="#000000" />
-
-        <EditText
-            android:id="@+id/et_edit_profile_name"
-            android:layout_width="match_parent"
-            android:layout_height="45dp" />
+            android:layout_height="35dp"
+            android:gravity="center"
+            android:textSize="30dp"
+            android:textColor="#000000"/>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/edit_profile_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_profile_name"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/phone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:text="Phone Number"
-            android:textColor="#000000" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/phoneIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/ic_003_whatsapp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_toRightOf="@+id/phoneIcon"
+                android:layout_centerVertical="true"
+                android:text="Phone"
+                android:textColor="#000000" />
+
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/et_edit_profile_phone"
             android:layout_width="match_parent"
-            android:layout_height="45dp" />
-    </LinearLayout>
+            android:layout_height="40dp"
+            android:layout_below="@+id/phone"/>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/edit_profile_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_profile_phone"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:text="Email"
-            android:textColor="#000000" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/emailIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/ic_002_gmail_1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_toRightOf="@+id/emailIcon"
+                android:layout_centerVertical="true"
+                android:text="Email"
+                android:textColor="#000000" />
+
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/et_edit_profile_email"
             android:layout_width="match_parent"
-            android:layout_height="45dp" />
-    </LinearLayout>
+            android:layout_height="40dp"
+            android:layout_below="@+id/email"/>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/edit_profile_facebook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_profile_email"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/facebook"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:text="Facebook"
-            android:textColor="#000000" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/facebookIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/ic_001_facebook_1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_toRightOf="@+id/facebookIcon"
+                android:layout_centerVertical="true"
+                android:text="Facebook"
+                android:textColor="#000000" />
+
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/et_edit_profile_facebook"
             android:layout_width="match_parent"
-            android:layout_height="45dp" />
-    </LinearLayout>
+            android:layout_height="40dp"
+            android:layout_below="@+id/facebook"/>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/edit_profile_twitter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/edit_profile_facebook"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/twitter"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:text="Twitter"
-            android:textColor="#000000" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/twitterIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:src="@drawable/ic_005_twitter_1" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_toRightOf="@+id/twitterIcon"
+                android:layout_centerVertical="true"
+                android:text="Twitter"
+                android:textColor="#000000" />
+
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/et_edit_profile_twitter"
             android:layout_width="match_parent"
-            android:layout_height="45dp" />
-    </LinearLayout>
+            android:layout_height="40dp"
+            android:layout_below="@+id/twitter"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -144,7 +204,7 @@
         android:layout_below="@id/edit_profile_twitter"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="3dp">
 
         <Button
@@ -155,7 +215,8 @@
             android:layout_marginLeft="8dp"
             android:gravity="center"
             android:text="save"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:theme="@style/PrimaryButton"/>
 
         <Button
             android:id="@+id/cancel_edit"
@@ -166,7 +227,8 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:gravity="center"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:theme="@style/PrimaryButton"/>
 
     </LinearLayout>
 

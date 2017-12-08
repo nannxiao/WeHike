@@ -20,7 +20,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:windowSoftInputMode="stateHidden">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -33,19 +32,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".trails.MapsActivity"
+            android:label="Map"/>
+        <activity android:name=".trails.TrailsDetailActivity"
+            android:label="Activities in the Trail"/>
         <activity
-            android:name=".trails.MapsActivity"></activity>
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".trails.TrailsDetailActivity"></activity>
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+            android:name=".posts.CreatePostActivity"
+            android:label="Create Your Moment"></activity>
         <activity
-            android:name=".posts.CreatePostActivity"></activity>
+            android:name=".posts.PostDetailActivity"
+            android:label="Comments"></activity>
         <activity
-            android:name=".posts.PostDetailActivity"></activity>
+            android:name=".profile.EditProfileActivity"
+            android:label="My Profile" ></activity>
         <activity
-            android:name=".profile.EditProfileActivity"></activity>
+            android:name=".profile.ProfileActivity"
+            android:label="Profile">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
